@@ -4,11 +4,73 @@
  */
 package com.mycompany.radray_program;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author amald
  */
 public class crud extends javax.swing.JFrame {
+    private int selectedId = -1;
+    
+    private void loadData() {
+
+    DefaultTableModel model =
+            (DefaultTableModel) jTable1.getModel();
+
+    model.setRowCount(0);
+
+    String sql = "SELECT * FROM Users";
+
+    try {
+
+        Connection conn = MsConnectAccess.getConnection();
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Database connection failed!");
+            return;
+        }
+
+        PreparedStatement pst = conn.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+
+            model.addRow(new Object[]{
+                rs.getInt("Id"),
+                rs.getString("Name"),
+                rs.getString("Email"),
+                rs.getInt("Age")
+            });
+        }
+
+        rs.close();
+        pst.close();
+        conn.close();
+
+    } catch (SQLException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Database Error: " + e.getMessage());
+    }
+}
+    
+    private void clearFields() {
+
+    txtName.setText("");
+    txtEmail.setText("");
+    txtAge.setText("");
+
+    selectedId = -1;
+
+    jTable1.clearSelection();
+}
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(crud.class.getName());
 
@@ -17,6 +79,7 @@ public class crud extends javax.swing.JFrame {
      */
     public crud() {
         initComponents();
+        loadData();
     }
 
     /**
@@ -28,21 +91,338 @@ public class crud extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        jPanel1 = new javax.swing.JPanel();
+        txtEmail = new javax.swing.JTextField();
+        txtAge = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        btnCreate = new javax.swing.JButton();
+        btnUpdate = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnRead = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
+        btnSearch = new javax.swing.JButton();
+        txtSearch = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel1.add(txtEmail, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 99, 160, -1));
+        jPanel1.add(txtAge, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 133, 160, -1));
+
+        jLabel1.setText("Name");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 68, -1, -1));
+
+        jLabel2.setText("Email");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 102, -1, -1));
+
+        jLabel3.setText("Age");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 136, -1, -1));
+        jPanel1.add(txtName, new org.netbeans.lib.awtextra.AbsoluteConstraints(71, 70, 160, -1));
+
+        jLabel4.setText("jLabel4");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, -1, -1));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 260, 320));
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "id", "name", "email", "age"
+            }
+        ));
+        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTable1MouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable1);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 130, -1, 270));
+
+        btnCreate.setText("create");
+        btnCreate.addActionListener(this::btnCreateActionPerformed);
+        getContentPane().add(btnCreate, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 410, -1, -1));
+
+        btnUpdate.setText("update");
+        btnUpdate.addActionListener(this::btnUpdateActionPerformed);
+        getContentPane().add(btnUpdate, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 410, -1, -1));
+
+        btnDelete.setText("delete");
+        btnDelete.addActionListener(this::btnDeleteActionPerformed);
+        getContentPane().add(btnDelete, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 410, -1, -1));
+
+        btnRead.setText("read");
+        btnRead.addActionListener(this::btnReadActionPerformed);
+        getContentPane().add(btnRead, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 410, -1, -1));
+
+        jLabel5.setText("jLabel5");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, -1, -1));
+
+        btnSearch.setText("search");
+        btnSearch.addActionListener(this::btnSearchActionPerformed);
+        getContentPane().add(btnSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 100, -1, -1));
+
+        txtSearch.addActionListener(this::txtSearchActionPerformed);
+        getContentPane().add(txtSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(291, 100, 360, -1));
+
+        jLabel6.setText("jLabel6");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 80, -1, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        // TODO add your handling code here:
+        int selectedRow = jTable1.getSelectedRow();
+
+    if (selectedRow >= 0) {
+
+        selectedId = Integer.parseInt(
+                jTable1.getValueAt(selectedRow, 0).toString()
+        );
+
+        txtName.setText(
+                jTable1.getValueAt(selectedRow, 1).toString()
+        );
+
+        txtEmail.setText(
+                jTable1.getValueAt(selectedRow, 2).toString()
+        );
+
+        txtAge.setText(
+                jTable1.getValueAt(selectedRow, 3).toString()
+        );
+    }
+
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void txtSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSearchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtSearchActionPerformed
+
+    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
+        // TODO add your handling code here:
+        String sql = "INSERT INTO Users (Name, Email, Age) VALUES (?, ?, ?)";
+
+    try {
+
+        Connection conn = MsConnectAccess.getConnection();
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Database connection failed!");
+            return;
+        }
+
+        PreparedStatement pst = conn.prepareStatement(sql);
+
+        pst.setString(1, txtName.getText());
+        pst.setString(2, txtEmail.getText());
+        pst.setInt(3, Integer.parseInt(txtAge.getText()));
+
+        pst.executeUpdate();
+
+        JOptionPane.showMessageDialog(this,
+                "User Created Successfully!");
+
+        pst.close();
+        conn.close();
+
+        clearFields();
+        loadData();
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Age must be a number!");
+
+    } catch (SQLException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Database Error: " + e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnCreateActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        // TODO add your handling code here:
+         if (selectedId == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Please select a user from the table first!");
+        return;
+    }
+
+    String sql = "UPDATE Users SET Name=?, Email=?, Age=? WHERE Id=?";
+
+    try {
+
+        Connection conn = MsConnectAccess.getConnection();
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Database connection failed!");
+            return;
+        }
+
+        PreparedStatement pst = conn.prepareStatement(sql);
+
+        pst.setString(1, txtName.getText());
+        pst.setString(2, txtEmail.getText());
+        pst.setInt(3, Integer.parseInt(txtAge.getText()));
+        pst.setInt(4, selectedId);
+
+        int result = pst.executeUpdate();
+
+        if (result > 0) {
+            JOptionPane.showMessageDialog(this,
+                    "User Updated Successfully!");
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "User ID not found!");
+        }
+
+        pst.close();
+        conn.close();
+
+        clearFields();
+        loadData();
+
+    } catch (NumberFormatException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Age must be a number!");
+
+    } catch (SQLException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Database Error: " + e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        // TODO add your handling code here:
+         if (selectedId == -1) {
+        JOptionPane.showMessageDialog(this,
+                "Please select a user from the table first!");
+        return;
+    }
+
+    int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete this user?",
+            "Confirm Delete",
+            JOptionPane.YES_NO_OPTION
+    );
+
+    if (confirm != JOptionPane.YES_OPTION) {
+        return;
+    }
+
+    String sql = "DELETE FROM Users WHERE Id=?";
+
+    try {
+
+        Connection conn = MsConnectAccess.getConnection();
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Database connection failed!");
+            return;
+        }
+
+        PreparedStatement pst = conn.prepareStatement(sql);
+
+        pst.setInt(1, selectedId);
+
+        int result = pst.executeUpdate();
+
+        if (result > 0) {
+            JOptionPane.showMessageDialog(this,
+                    "User Deleted Successfully!");
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "User ID not found!");
+        }
+
+        pst.close();
+        conn.close();
+
+        clearFields();
+        loadData();
+
+    } catch (SQLException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Database Error: " + e.getMessage());
+    }
+
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnReadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadActionPerformed
+        // TODO add your handling code here:
+        loadData();
+    }//GEN-LAST:event_btnReadActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel model =
+            (DefaultTableModel) jTable1.getModel();
+
+    model.setRowCount(0);
+
+    String sql = "SELECT * FROM Users WHERE Name LIKE ?";
+
+    try {
+
+        Connection conn = MsConnectAccess.getConnection();
+
+        if (conn == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Database connection failed!");
+            return;
+        }
+
+        PreparedStatement pst = conn.prepareStatement(sql);
+
+        pst.setString(1, "%" + txtSearch.getText() + "%");
+
+        ResultSet rs = pst.executeQuery();
+
+        while (rs.next()) {
+
+            model.addRow(new Object[]{
+                rs.getInt("Id"),
+                rs.getString("Name"),
+                rs.getString("Email"),
+                rs.getInt("Age")
+            });
+        }
+
+        rs.close();
+        pst.close();
+        conn.close();
+
+    } catch (SQLException e) {
+
+        JOptionPane.showMessageDialog(this,
+                "Database Error: " + e.getMessage());
+    }
+    }//GEN-LAST:event_btnSearchActionPerformed
 
     /**
      * @param args the command line arguments
@@ -70,5 +450,23 @@ public class crud extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCreate;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnRead;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JButton btnUpdate;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField txtAge;
+    private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtSearch;
     // End of variables declaration//GEN-END:variables
 }

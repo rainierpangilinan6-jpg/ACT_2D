@@ -4,7 +4,7 @@
  */
 
 
-package com.mycompany;
+package com.mycompany.radray_program;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,4 +30,20 @@ public class MsConnectAccess {
         return null;
 }
     
+    public static Connection getConnection() {
+
+        Connection conn = null;
+
+        try {
+            String url = "jdbc:ucanaccess://C://Users//amald//OneDrive//Documents/ayuro.accdb";
+            //"jdbc:ucanaccess://C://Users//CL2-PC//Documents//rochie.accdb"
+
+            conn = DriverManager.getConnection(url);
+
+        } catch (SQLException e) {
+            System.out.println("Database Connection Error: " + e.getMessage());
+        }
+
+        return conn;
+    }
 }
